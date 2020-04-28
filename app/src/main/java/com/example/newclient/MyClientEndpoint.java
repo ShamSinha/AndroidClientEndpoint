@@ -26,6 +26,7 @@ class MyClientEndpoint {
     private Session session1;
     private String EchoFromServer ;
 
+
     Session ConnectClientToServer(final TextView text) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -45,6 +46,7 @@ class MyClientEndpoint {
     @OnMessage
     public void onMessage(String incomingMessage){
         EchoFromServer = incomingMessage ;
+
     }
 
 
@@ -73,16 +75,26 @@ class MyClientEndpoint {
             public void run() {
                 try {
                     session1.getBasicRemote().sendText(message);
+                    textView1.setText("Message Sent");
                 } catch (IOException e) {
                     textView1.setText("IOException in sending Message");
                     e.printStackTrace();
                 }
-                textView1.setText(EchoFromServer);
+
             }
         });
         thread1.start();
     }
+
+    void WriteMessageFromServer(TextView textView, TextView textView1){
+        textView1.setText("");
+        textView.setText(EchoFromServer);
+    }
+
 }
+
+
+
 //"ws://echo.websocket.org"
 
     /*MainActivity m = new MainActivity();

@@ -2,6 +2,7 @@ package com.example.newclient;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,13 +21,13 @@ public class MainActivity extends AppCompatActivity {
     TextView textView6;
     MyClientEndpoint myClientEndpoint  = new MyClientEndpoint();
     Session session ;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main2);
         editText = (EditText) findViewById(R.id.editText2);
         textView3 = (TextView) findViewById(R.id.textView3);
-
         textView4 = (TextView) findViewById(R.id.textView4);
         textView4.setText("Not Connected To Server");
         textView6 = (TextView) findViewById(R.id.textView6) ;
@@ -35,26 +36,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     public void send(View view) {
 
-        message  = editText.getText().toString() ;
+        message = editText.getText().toString();
 
-        myClientEndpoint.SendMessageToServer(message,textView3);
-
-
-     /*   Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    myClientEndpoint.SendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();*/
+        myClientEndpoint.SendMessageToServer(message, textView6);
 
     }
+    public void retrieve(View view){
+
+        myClientEndpoint.WriteMessageFromServer(textView3,textView6);
+
+    }
+
+
 
 
 
