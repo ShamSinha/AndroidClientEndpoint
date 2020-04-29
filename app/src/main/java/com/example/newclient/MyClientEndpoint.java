@@ -24,7 +24,7 @@ import javax.websocket.WebSocketContainer;
 class MyClientEndpoint {
 
     private Session session1;
-    private String EchoFromServer ;
+    private String MessageFromServer ;
 
 
     Session ConnectClientToServer(final TextView text) {
@@ -45,7 +45,7 @@ class MyClientEndpoint {
 
     @OnMessage
     public void onMessage(String incomingMessage){
-        EchoFromServer = incomingMessage ;
+        MessageFromServer = incomingMessage ;
 
     }
 
@@ -88,7 +88,7 @@ class MyClientEndpoint {
 
     void WriteMessageFromServer(TextView textView, TextView textView1){
         textView1.setText("");
-        textView.setText(EchoFromServer);
+        textView.setText(MessageFromServer);
     }
 
 }
