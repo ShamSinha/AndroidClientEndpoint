@@ -24,7 +24,7 @@ import javax.websocket.WebSocketContainer;
 class MyClientEndpoint {
 
     private Session session1;
-    private String EchoFromServer ;
+    private String MessageFromServer ;
 
 
     Session ConnectClientToServer(final TextView text) {
@@ -45,7 +45,7 @@ class MyClientEndpoint {
 
     @OnMessage
     public void onMessage(String incomingMessage){
-        EchoFromServer = incomingMessage ;
+        MessageFromServer = incomingMessage ;
 
     }
 
@@ -53,7 +53,7 @@ class MyClientEndpoint {
     private void connectToWebSocket(TextView text) {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 
-            URI uri = URI.create("ws://echo.websocket.org");
+            URI uri = URI.create("ws://0f53e667.ngrok.io/mavenjavafxserver/chat");
         try {
             session1 = container.connectToServer(this, uri);
             if(session1 != null){
@@ -88,7 +88,7 @@ class MyClientEndpoint {
 
     void WriteMessageFromServer(TextView textView, TextView textView1){
         textView1.setText("");
-        textView.setText(EchoFromServer);
+        textView.setText(MessageFromServer);
     }
 
 }
@@ -96,18 +96,6 @@ class MyClientEndpoint {
 
 
 //"ws://echo.websocket.org"
-
-    /*MainActivity m = new MainActivity();
-
-    @OnOpen
-    public void onOpen(Session session){
-       this.session = session;
-    }
-
-    @OnMessage
-    public void onMessage(String incomingMessage){
-        m.textView3.setText(String.format("%s   %s", session.getId(), incomingMessage));
-    }*/
 
 
 
