@@ -97,17 +97,5 @@ class MyClientEndpoint {
 
 //"ws://echo.websocket.org"
 
-    /*MainActivity m = new MainActivity();
-
-    @OnOpen
-    public void onOpen(Session session){
-       this.session = session;
-    }
-
-    @OnMessage
-    public void onMessage(String incomingMessage){
-        m.textView3.setText(String.format("%s   %s", session.getId(), incomingMessage));
-    }*/
-
-
+   
 
