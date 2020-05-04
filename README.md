@@ -2,4 +2,4 @@
 
 Using Java Api for Websocket 
 
-Android as ClientEndpoint
+Make a basic chat Application making Android as ClientEndpoint.
