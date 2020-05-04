@@ -1,101 +1,85 @@
 package com.example.newclient;
 
-import android.widget.TextView;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.websocket.ClientEndpoint;
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
-
-
 @ClientEndpoint
-class MyClientEndpoint {
+class MyClientEndpoint  {
 
     private Session session1;
-    private String MessageFromServer ;
+    private String MessageFromServer = "Hi";
+    private boolean stopThread  ;
+    private static MyClientEndpoint instance = new MyClientEndpoint(); // Eagerly Loading of single ton instance
 
+    private MyClientEndpoint(){
+        // private to prevent anyone else from instantiating
+    }
 
-    Session ConnectClientToServer(final TextView text) {
+    public static MyClientEndpoint getInstance(){
+        return instance;
+    }
+
+    void ConnectClientToServer() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-              connectToWebSocket(text);
+              connectToWebSocket();
             }
             });
         thread.start();
-        return session1;
     }
+
 
     @OnOpen
     public void onOpen(Session session){
         session1 = session ;
+
+    }
+
+    public Session getSession1() {
+        return session1;
     }
 
     @OnMessage
     public void onMessage(String incomingMessage){
         MessageFromServer = incomingMessage ;
-
     }
 
+    public String getMessageFromServer() {
+        return MessageFromServer;
+    }
 
-    private void connectToWebSocket(TextView text) {
+    private  void connectToWebSocket() {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 
-            URI uri = URI.create("ws://0f53e667.ngrok.io/mavenjavafxserver/chat");
+            URI uri = URI.create("ws://e37c53fd.ngrok.io/mavenjavafxserver/chat");
         try {
             session1 = container.connectToServer(this, uri);
             if(session1 != null){
-                text.setText("Connected to Session : \n" + session1.getId());
+
+                Log.d("TAG" , "Connected to Session: "+ session1.getId());
             }
         } catch (DeploymentException e) {
             e.printStackTrace();
-            text.setText("Deployment Exception");
+
+            Log.e("ERROR" , "Deployment Exception");
         } catch (IOException e) {
             e.printStackTrace();
-            text.setText("IO Exception");
+            Log.e("ERROR" , "IO Exception");
         }
-
     }
-
-    void SendMessageToServer(final String message, final TextView textView1) {
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    session1.getBasicRemote().sendText(message);
-                    textView1.setText("Message Sent");
-                } catch (IOException e) {
-                    textView1.setText("IOException in sending Message");
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        thread1.start();
-    }
-
-    void WriteMessageFromServer(TextView textView, TextView textView1){
-        textView1.setText("");
-        textView.setText(MessageFromServer);
-    }
-
 }
 
-
-
-//"ws://echo.websocket.org"
 
 
 

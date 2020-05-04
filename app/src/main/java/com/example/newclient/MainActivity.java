@@ -1,65 +1,92 @@
 package com.example.newclient;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import java.io.IOException;
 
-import java.util.List;
-
-import javax.websocket.Session;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     EditText editText ;
-    String message = "Hello";
+    String message ;
     TextView textView3 ;
-    TextView textView4 ;
-    TextView textView6;
-    MyClientEndpoint myClientEndpoint  = new MyClientEndpoint();
-    Session session ;
+    MyClientEndpoint myClientEndpoint ;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main2);
+
         editText = (EditText) findViewById(R.id.editText2);
         textView3 = (TextView) findViewById(R.id.textView3);
-        textView4 = (TextView) findViewById(R.id.textView4);
-        textView4.setText("Not Connected To Server");
-        textView6 = (TextView) findViewById(R.id.textView6) ;
-        textView6.setText("");
+
+        myClientEndpoint = MyClientEndpoint.getInstance() ;
+
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        writemessage();
+    }
 
     public void send(View view) {
 
         message = editText.getText().toString();
 
-        myClientEndpoint.SendMessageToServer(message, textView6);
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    myClientEndpoint.getSession1().getBasicRemote().sendText(message);
+                    Log.d("TAG" , "Message Sent" );
+                    Log.d("TAG", myClientEndpoint.getSession1().getId());
+
+
+                } catch (IOException e) {
+                    Log.e("ERROR" , "IOException in BasicRemote") ;
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        thread1.start();
 
     }
-    public void retrieve(View view){
-
-        myClientEndpoint.WriteMessageFromServer(textView3,textView6);
-
-    }
-
-
-
-
 
     public void onClickbutton(View view)  {
 
-        session = myClientEndpoint.ConnectClientToServer(textView4);
-        //textView4.setText(MyClientEndpoint.session.getId());
-
+        myClientEndpoint.ConnectClientToServer();
     }
+    public void Moveto2ndActivity(View view){
+        Intent i = new Intent(MainActivity.this ,MainActivity3.class);
+        startActivity(i);
+    }
+
+    public void writemessage(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    textView3.setText(myClientEndpoint.getMessageFromServer()) ;
+                }
+            }
+        });
+        thread.start();
+    }
+
+
 
 
 
